@@ -1,18 +1,17 @@
-from getpass import getpass
+#!/usr/bin/env bash
+set -euo pipefail
 
+# Demo login. Configure credentials in the environment before running.
+: "${LOGIN_USER:?Set LOGIN_USER before running}"
+: "${LOGIN_PASSWORD:?Set LOGIN_PASSWORD before running}"
 
-def login(users: dict[str, str]) -> bool:
-	"""Prompt for a username and password and check them against users."""
-	username = input("Username: ").strip()
-	password = getpass("Password: ")
+read -r -p "Username: " username
+read -r -s -p "Password: " password
+printf '\n'
 
-	if users.get(username) == password:
-		print("Login successful.")
-		return True
-
-	print("Invalid username or password.")
-	return False
-
-
-if __name__ == "__main__":
-	login({"aria": "change-me"})
+if [[ "$username" == "$LOGIN_USER" && "$password" == "$LOGIN_PASSWORD" ]]; then
+	echo "Login successful."
+else
+	echo "Invalid username or password." >&2
+	exit 1
+fi
